@@ -6,3 +6,4 @@ thinkphp
 .env
 /config/database.php
 /public/imgs
+/runtime
