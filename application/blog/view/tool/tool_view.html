@@ -1,0 +1,44 @@
+{include file='/common/header' /}
+{include file='/common/nav' /}
+<style>
+    img{
+        width:auto;
+        height:auto;
+        max-width:100%;
+        max-height:100%;
+    }
+</style>
+
+<article>
+    <main style="width: 30%;">
+        <div class="news_box">
+            <ul>
+                {foreach $toolList as $toolKey=>$toolValue }
+                    <a href="#" >
+                        <li class="left-nav" data-url="{$toolValue.url}" style="width: 100%;">
+                            <i>
+                                <img src="{$toolValue.pic_url}">
+                            </i>
+                            <h3>{$toolValue.title}</h3>
+                        </li><br>
+                    </a>
+                {/foreach}
+            </ul>
+        </div>
+    </main>
+    <iframe src="https://www.baidu.com" id="right-iframe" style="border:3px solid #fff9ec;height:800px;width: 67%;float: right;" frameborder="0"></iframe>
+</article>
+{include file='/common/footer' /}
+<script>
+    $(function () {
+        changeIframe();
+    });
+    // 改变右侧iframe显示
+    function changeIframe() {
+        $('.left-nav').click(function () {
+            console.log($(this).data('url'));
+            $('#right-iframe').attr('src', $(this).data('url'));
+        });
+    }
+</script>
+
