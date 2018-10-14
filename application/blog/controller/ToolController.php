@@ -7,8 +7,9 @@
 namespace app\blog\controller;
 
 use app\blog\service\ToolService;
-use app\common\tool\MyRequest;
-use app\common\tool\MyResponse;
+use tool\MyRequest;
+use tool\MyResponse;
+use tool\MyRedis;
 use think\Controller;
 
 class ToolController extends Controller {
@@ -22,13 +23,25 @@ class ToolController extends Controller {
      * CreateTime: 2018/10/4 下午4:33
      */
     public function tool_view() {
-        //连接本地的 Redis 服务
-        $redis = new \Redis();
-        $redis->connect('39.106.144.125', 6379);
-        $redis->set('tuzi',123);
         // 查找工具
-        $toolList = ToolService::instance()->getToolList();
+        $toolList = ToolService::instance()->getToolList([],'visit_num');
         $this->assign('toolList', $toolList);
         return view();
+    }
+
+    /**
+     * Description: 增加阅读量
+     * User: 郭玉朝
+     * CreateTime: 2018/10/13 下午6:25
+     */
+    public function add_visit_num() {
+        // 验证参数
+        $checkParams = $this->checkParams(['id']);
+        if ($checkParams !== true) {
+            return $this->sendMsg(401, $checkParams);
+        }
+        // 推入队列
+        MyRedis::instance()->rPush('tool_visit', $this->postParams['id']);
+        return $this->sendMsg(200,'');
     }
 }

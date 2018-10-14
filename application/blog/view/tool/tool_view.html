@@ -15,11 +15,16 @@
             <ul>
                 {foreach $toolList as $toolKey=>$toolValue }
                     <a href="#" >
-                        <li class="left-nav" data-url="{$toolValue.url}" style="width: 100%;">
+                        <li class="left-nav" data-url="{$toolValue.url}" data-id="{$toolValue.id}" style="width: 100%;">
                             <i>
                                 <img src="{$toolValue.pic_url}">
                             </i>
-                            <h3>{$toolValue.title}</h3>
+                            <div style="height:80px;">
+                                <div style="padding-top: 1rem;">
+                                    <strong>{$toolValue.title}</strong>
+                                </div>
+                                <div style="margin-top: 1rem;">使用:<span class="visit-num-{$toolValue.id}">{$toolValue.visit_num}</span>次</div>
+                            </div>
                         </li><br>
                     </a>
                 {/foreach}
@@ -36,9 +41,16 @@
     // 改变右侧iframe显示
     function changeIframe() {
         $('.left-nav').click(function () {
-            console.log($(this).data('url'));
+            var id = $(this).data('id');
+            // 异步增加阅读量
+            curlAjax("{:url('blog/tool/add_visit_num')}", {id:id},'commonReturn');
+            $('.visit-num-'+id).html(parseInt($('.visit-num-'+id).html())+1);
             $('#right-iframe').attr('src', $(this).data('url'));
         });
+    }
+    
+    function commonReturn($data) {
+        
     }
 </script>
 

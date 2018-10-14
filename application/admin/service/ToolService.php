@@ -7,7 +7,7 @@
 namespace app\admin\service;
 
 use app\common\model\ToolModel;
-use app\common\tool\MyTime;
+use tool\MyTime;
 
 class ToolService {
 

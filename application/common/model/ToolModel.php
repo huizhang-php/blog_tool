@@ -37,10 +37,13 @@ class ToolModel extends Model {
      * User: 郭玉朝
      * CreateTime: 2018/10/11 下午9:40
      */
-    public function getTools($condition=[]) {
+    public function getTools($condition=[],$order='') {
         $sql = $this;
         if (!empty($condition)) {
             $sql = $sql->where($condition);
+        }
+        if ($order!=='') {
+            $sql = $sql->order($order,'desc');
         }
         return $sql->select();
     }
@@ -54,6 +57,19 @@ class ToolModel extends Model {
      */
     public function addTool($data) {
         return $this->save($data);
+    }
+
+    /**
+     * Description: 更新工具信息
+     * User: 郭玉朝
+     * CreateTime: 2018/10/13 下午10:40
+     * @param $condition
+     * @param $data
+     * @throws Exception
+     */
+    public function addVisitNum($id) {
+        $result =  $this->where('id='.$id)->setInc('visit_num');
+        return $result;
     }
 
 }

@@ -7,8 +7,8 @@
 namespace app\admin\controller;
 
 use think\Controller;
-use app\common\tool\MyResponse;
-use app\common\tool\MyRequest;
+use tool\MyResponse;
+use tool\MyRequest;
 
 class IndexController extends BaseController {
 

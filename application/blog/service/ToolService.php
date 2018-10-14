@@ -29,14 +29,25 @@ class ToolService {
     }
 
     /**
+     * Description: 增加访问量
+     * User: 郭玉朝
+     * CreateTime: 2018/10/13 下午10:39
+     * @param $id
+     * @throws \think\Exception
+     */
+    public function addVisitNum($id) {
+        return $this->toolModel->addVisitNum($id);
+    }
+
+    /**
      * Description: 获取Tool列表
      * User: 郭玉朝
      * CreateTime: 2018/10/12 下午4:02
      * @param array $condition
      * @return array|\PDOStatement|string|\think\Collection
      */
-    public function getToolList($condition=[]) {
+    public function getToolList($condition=[], $order) {
         $condition['status'] = 1;
-        return $this->toolModel->getTools($condition);
+        return $this->toolModel->getTools($condition, $order);
     }
 }

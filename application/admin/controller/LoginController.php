@@ -7,8 +7,8 @@
 namespace app\admin\controller;
 
 use app\admin\service\LoginService;
-use app\common\tool\MyResponse;
-use app\common\tool\MyRequest;
+use tool\MyResponse;
+use tool\MyRequest;
 use think\facade\Session;
 use think\Controller;
 

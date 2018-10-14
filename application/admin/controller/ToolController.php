@@ -7,9 +7,9 @@
 namespace app\admin\controller;
 
 use think\Controller;
-use app\common\tool\MyResponse;
-use app\common\tool\MyRequest;
-use app\common\tool\MyData;
+use tool\MyResponse;
+use tool\MyRequest;
+use tool\MyData;
 use think\facade\Request;
 use app\admin\service\ToolService;
 
