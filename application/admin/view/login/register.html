@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html>
+<html xmlns:wb="https://open.weibo.com/wb">
 <head>
     <meta charset="utf-8" />
     <title></title>
@@ -11,8 +10,28 @@
 </head>
 <style>
     input:-webkit-autofill { box-shadow: 0 0 0px 1000px white inset;}
+    .login-header {
+        height: 3rem;
+    }
+    .header-right {
+        height: 100%;
+        float: right;
+        padding: 0.8rem;
+    }
+    .header-right a {
+        /*line-height: 1rem;*/
+        color: rgb(102, 102, 102);
+    }
+    .register-btn {
+        margin-top: 1rem;
+    }
 </style>
 <body>
+<div class="login-header">
+    <div class="header-right">
+        <a href="{:url('admin/login/login')}">返回登录</a>
+    </div>
+</div>
 <div class="bg1"></div>
 <div class="gyl">
     Tuzisir   Tool!
@@ -20,7 +39,7 @@
 </div>
 <form class="layui-form" action="">
     <div class="bg">
-        <div class="wel">用户登录</div>
+        <div class="wel">用户注册</div>
         <div class="user">
             <div id="yonghu" style="">用户名</div>
             <input lay-verify="required" type="text" id="admin-name" placeholder="请输入6-15位账号" autocomplete="off" name="admin_name" />
@@ -29,22 +48,11 @@
             <div id="yonghu" >密&nbsp;&nbsp;&nbsp;码</div>
             <input lay-verify="required" class="" id="admin-password" autocomplete="off" type="password" placeholder="请输入6-15位密码" name="admin_password" />
         </div>
-        <!--<div class="verify" >-->
-            <!--<div id="yonghu" >验证码</div>-->
-            <!--<input lay-verify="required" class="" id="admin-verify" type="text" name="admin_verify" />-->
-        <!--</div>-->
-        <!--<div class="rem" >-->
-        <!--<input type="checkbox" name="" id="" value="" />-->
-        <!--<div id="reb">-->
-        <!--记住密码-->
-        <!--</div>-->
-        <!--</div>-->
-        <div class="fg" >
-            <div style="font-size: 11px;margin-top: 11px;">
-                <!--<a style="font-size: 11px;" href="#">忘记密码？</a>-->
-            </div>
+        <div class="verify" >
+            <div id="yonghu" >邮&nbsp; &nbsp;箱</div>
+            <input lay-verify="required" class="" id="admin-verify" type="text" placeholder="xxx@xxx" name="admin_verify" />
         </div>
-        <span class="layui-btn btn" lay-submit="" lay-filter="login-btn">登录</span>
+        <span class="layui-btn btn register-btn" lay-submit="" lay-filter="register-btn">立即注册</span>
     </div>
 </form>
 </body>
@@ -55,13 +63,13 @@
         form = layui.form
     });
     //监听提交
-    form.on('submit(login-btn)', function(data){
+    form.on('submit(register-btn)', function(data){
         var params = data.field;
         // 验证参数
         var checkParamsResult = checkParams(params);
         if (checkParamsResult !== true) return tipMsg(400, checkParamsResult);
         // 验证账号密码
-        var checkLogin = login(params);
+        var checkLogin = register(params);
         return false;
     });
 
@@ -75,10 +83,10 @@
         }
         return true;
     }
-    
+
     // 验证账号密码
-    function login(params) {
-        curlAjax("check_login", params, 'commonReturn');
+    function register(params) {
+        curlAjax("register", params, 'commonReturn');
     }
 
     // 公共返回

@@ -8,55 +8,67 @@
 </style>
 <div style="padding: 1rem 0rem 1rem 1rem;">
     <span class="layui-breadcrumb" lay-separator="—">
-        <a href="">Tool 管理</a>
-        <a href="">Tool 列表</a>
+        <a href="">栏位管理</a>
+        <a href="">导航栏列表</a>
     </span>
 </div>
 <hr class="layui-bg-orange">
 <script type="text/html" id="top-btn">
     <div class="layui-btn-container">
-        <a href="{:url('/admin/tool/add_tool')}">
-            <button class="layui-btn layui-btn-sm" lay-event="getCheckData">添加Tool</button>
+        <a href="{:url('/admin/navigation/add_nav')}">
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckData">添加导航栏</button>
         </a>
-        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="del-tool">删除Tool</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="del-tool">删除导航栏</button>
     </div>
-</script>
-
-<script type="text/html" id="pic_url">
-    <img src="{{d.pic_url}}" style="height: 100%;width: 100%;">
 </script>
 
 <script type="text/html" id="status">
     {{#
-        switch(d.status) {
-            case 1:}}
-                正常
+    switch(d.status) {
+    case 1:}}
+    正常
     {{#
-                break;
-            case 0:}}
-                禁用
+    break;
+    case 0:}}
+    禁用
     {{#          break;
-            default:}}
-                未知
+    default:}}
+    未知
+    {{#    }
+    }}
+</script>
+
+<script type="text/html" id="type">
+    {{#
+    switch(d.type) {
+    case 1:}}
+    公共
+    {{#
+    break;
+    case 0:}}
+    用户
+    {{#          break;
+    default:}}
+    未知
     {{#    }
     }}
 </script>
 
 <script type="text/html" id="right-btn">
-    <a href="{:url('/admin/tool/edit_tool')}?id={{d.id}}" class="layui-btn layui-btn-xs" lay-event="right-btn">修改</a>
-    <a href="{{d.url}}" class="layui-btn layui-btn-xs layui-btn-warm" lay-event="right-btn">访问</a>
+    <a href="{:url('/admin/navigation/edit_nav')}?id={{d.id}}" class="layui-btn layui-btn-xs" lay-event="right-btn">修改</a>
+    <a href="{{d.nav_url}}" class="layui-btn layui-btn-xs layui-btn-warm">访问</a>
     {{#
-        switch(d.status) {
-            case 1:}}
-                <button onclick="prohibit({{d.id}},{{d.status}});" data-id="{{d.id}}" data-status="{{d.status}}" class="layui-btn layui-btn-xs layui-btn-danger prohibit" lay-event="right-btn">下架</button>
+    switch(d.status) {
+    case 1:}}
+    <button onclick="prohibit({{d.id}},{{d.status}});" data-id="{{d.id}}" data-status="{{d.status}}" class="layui-btn layui-btn-xs layui-btn-danger prohibit" lay-event="right-btn">下架</button>
     {{#     break;
-            case 0:}}
-                <button onclick="prohibit({{d.id}},{{d.status}});" data-id="{{d.id}}" data-status="{{d.status}}" class="layui-btn layui-btn-xs prohibit" lay-event="right-btn">上线</button>
+    case 0:}}
+    <button onclick="prohibit({{d.id}},{{d.status}});" data-id="{{d.id}}" data-status="{{d.status}}" class="layui-btn layui-btn-xs prohibit" lay-event="right-btn">上线</button>
     {{#
-            default:}}
-                <button onclick="prohibit({{d.id}},{{d.status}});" data-id="{{d.id}}" data-status="{{d.status}}" class="layui-btn layui-btn-xs prohibit" lay-event="right-btn">上线</button>
+    default:}}
+    <button onclick="prohibit({{d.id}},{{d.status}});" data-id="{{d.id}}" data-status="{{d.status}}" class="layui-btn layui-btn-xs prohibit" lay-event="right-btn">上线</button>
     {{#
-        }
+    }
     }}
 </script>
 
@@ -71,7 +83,7 @@
             status = 1;
         }
         var data = {id:id,status:status};
-        curlAjax("{:url('admin/tool/prohibit')}", data, 'commonReturn');
+        curlAjax("{:url('admin/navigation/prohibit')}", data, 'commonReturn');
     }
     layui.use(['table','element'], function(){
         var table = layui.table;
@@ -80,16 +92,15 @@
         table.render({
             elem: '#tool-list'
             ,toolbar: '#top-btn'
-            ,url: "{:url('/admin/tool/get_tools')}"
+            ,url: "{:url('/admin/navigation/get_navs')}"
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             ,cols: [[
                 {type:'checkbox'}
                 ,{field:'id', title: 'ID',width:50, sort: true}
-                ,{field:'pic_url', title: 'Tool图片',templet: '#pic_url'}
-                ,{field:'title', title: 'Tool标题'}
-                ,{field:'brief_introduction', title: 'Tool简介'}
-                ,{field:'url', title: 'Tool地址'}
-                ,{field:'visit_num', title: '访问量',width:80, sort: true}
+                ,{field:'nav_name', title: '名称'}
+                ,{field:'nav_url', title: '地址'}
+                ,{field:'brief_introduction', title: '简介'}
+                ,{field:'type', title: '类型', templet: '#type'}
                 ,{field:'status', title: '状态',width:80, sort: true, templet: '#status'}
                 ,{field:'c_time', width:165, title: '添加时间', sort: true}
                 ,{field:'u_time', width:165, title: '更新时间', sort: true}
@@ -97,6 +108,7 @@
             ]]
             ,page: true
         });
+
         //头工具栏事件
         table.on('toolbar(tool-list)', function(obj){
             var checkStatus = table.checkStatus(obj.config.id);
@@ -109,7 +121,7 @@
                     });
                     layer.confirm('一旦删除不可恢复，是否继续？', {btn: ['确定','取消'],icon: 3}, function() {
                         // 请求删除接口
-                        curlAjax("{:url('admin/tool/del_tool')}", curlData, 'commonReturn');
+                        curlAjax("{:url('admin/navigation/del_nav')}", curlData, 'commonReturn');
                     });
                     break;
             }

@@ -58,26 +58,6 @@
             ,element = layui.element
             ,upload  = layui.upload
         element.init();
-        //普通图片上传
-        var uploadInst = upload.render({
-            elem: '#upload-img'
-            ,url: "{:url('/admin/tool/upload_img')}"
-            ,before: function(obj){
-                //预读本地文件示例，不支持ie8
-                obj.preview(function(index, file, result){
-                    $('#upload-img').attr('src', result); //图片链接（base64）
-                });
-            }
-            ,done: function(res){
-                if(res.code === 200){
-                    $("#tool-pic-url").val(res.data.file_url);
-                }
-            }
-            ,error: function(){
-
-            }
-        });
-
         //监听提交
         form.on('submit(add-btn)', function(data){
             curlAjax("{:url('admin/tool/edit_tool')}", data.field, 'commonReturn');

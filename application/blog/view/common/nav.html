@@ -3,7 +3,13 @@
         <div class="logo"><a href="#">Tuzisir</a></div>
         <h2 id="mnavh"><span class="navicon"></span></h2>
         <ul id="starlist">
-            <li><a href="{:url('blog/tool/tool_view')}">码农Tool</a></li>
+            {foreach $navList as $key=>$value }
+                {if $value.id eq $nowNav}
+                    <li style="background-color: #3690cf;"><a style="color: #fff9ec;" href="{$value.nav_url}?id={$value.id}">{$value.nav_name}</a></li>
+                {else /}
+                    <li><a href="{$value.nav_url}?id={$value.id}">{$value.nav_name}</a></li>
+                {/if}
+            {/foreach}
         </ul>
         <div class="searchbox">
             <div id="search_bar" class="search_bar">

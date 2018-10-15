@@ -7,6 +7,7 @@
 namespace app\admin\controller;
 
 use app\admin\service\LoginService;
+use think\facade\Request;
 use tool\MyResponse;
 use tool\MyRequest;
 use think\facade\Session;
@@ -24,7 +25,7 @@ class LoginController extends Controller {
      * User: 郭玉朝
      * CreateTime: 2018/10/10 下午1:27
      */
-    public function login_view() {
+    public function login() {
         return view();
     }
 
@@ -48,6 +49,21 @@ class LoginController extends Controller {
             return $this->sendMsg(200, '登录成功，正在跳转...');
         }
         return $this->sendMsg(400, '登录失败，请重试...');
+    }
+
+    /**
+     * Description: 用户注册
+     * User: 郭玉朝
+     * CreateTime: 2018/10/14 下午10:36
+     */
+    public function register() {
+        if (Request::isGet()) return view();
+        $checkParams = $this->checkParams(['admin_name','admin_password','admin_email']);
+        if ($checkParams !== true) {
+            return $this->sendMsg(401, $checkParams);
+        }
+        // 必要信息是否已经存在
+
     }
 
     /**

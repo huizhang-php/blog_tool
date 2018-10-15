@@ -1,0 +1,75 @@
+{include file='/common/header' /}
+<div style="padding: 1rem 0 0rem 1rem;">
+    <span class="layui-breadcrumb" lay-separator="—">
+        <a href="">栏目管理</a>
+        <a href="">修改导航栏</a>
+    </span>
+</div>
+<hr class="layui-bg-orange">
+<fieldset class="layui-elem-field width-35rem ml-3rem mt-2rem">
+    <legend>修改导航栏</legend>
+    <div class="layui-field-box">
+        <form class="layui-form" action="">
+            <input type="hidden" lay-verify="required" value="{$navInfo.id}" name="id">
+            <div class="layui-form-item">
+                <label class="layui-form-label">导航栏名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="nav_name" value="{$navInfo.nav_name}" lay-verify="required" autocomplete="off" placeholder="请输入导航栏名称" class="layui-input input-normal">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">导航栏类型</label>
+                <div class="layui-input-block">
+                    {if $navInfo.type eq 1}
+                        <input type="radio" name="type" value="0" title="公共">
+                        <input type="radio" name="type" value="1" title="用户" checked="">
+                    {else/}
+                        <input type="radio" name="type" value="0" title="公共" checked="">
+                        <input type="radio" name="type" value="1" title="用户">
+                    {/if}
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">导航栏url</label>
+                <div class="layui-input-block">
+                    <input type="text" name="nav_url" value="{$navInfo.nav_url}" lay-verify="required" autocomplete="off" placeholder="请输入导航栏 Url" class="layui-input input-long">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">导航栏简介</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入导航栏简介" lay-verify="required" name="brief_introduction" class="layui-textarea input-long">{$navInfo.brief_introduction}</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="edit-btn">立即修改</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'upload'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,element = layui.element
+            ,upload  = layui.upload;
+        form.render();
+        element.init();
+        //监听提交
+        form.on('submit(edit-btn)', function(data){
+            curlAjax("{:url('admin/navigation/edit_nav')}", data.field, 'commonReturn');
+            return false;
+        });
+    });
+
+    // 公共ajax返回处理函数
+    function commonReturn(data) {
+        tipMsg(data.code, data.msg);
+    }
+</script>
+

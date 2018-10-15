@@ -1,0 +1,56 @@
+{include file='/common/header' /}
+{include file='/common/nav' /}
+<style>
+    img{
+        width:auto;
+        height:auto;
+        max-width:100%;
+        max-height:100%;
+    }
+</style>
+
+<article>
+    <main style="width: 30%;">
+        <div class="news_box">
+            <ul>
+                {foreach $toolList as $toolKey=>$toolValue }
+                <a href="#" >
+                    <li class="left-nav" data-url="{$toolValue.url}" data-id="{$toolValue.id}" style="width: 100%;">
+                        <i>
+                            <img src="{$toolValue.pic_url}">
+                        </i>
+                        <div style="height:80px;">
+                            <div style="padding-top: 1rem;">
+                                <strong>{$toolValue.title}</strong>
+                            </div>
+                            <div style="margin-top: 1rem;">使用:<span class="visit-num-{$toolValue.id}">{$toolValue.visit_num}</span>次</div>
+                        </div>
+                    </li><br>
+                </a>
+                {/foreach}
+            </ul>
+        </div>
+    </main>
+    <iframe src="https://www.baidu.com" id="right-iframe" style="border:3px solid #fff9ec;height:800px;width: 67%;float: right;" frameborder="0"></iframe>
+</article>
+{include file='/common/footer' /}
+<script>
+    $(function () {
+        changeIframe();
+    });
+    // 改变右侧iframe显示
+    function changeIframe() {
+        $('.left-nav').click(function () {
+            var id = $(this).data('id');
+            // 异步增加阅读量
+            curlAjax("{:url('blog/tool/add_visit_num')}", {id:id},'commonReturn');
+            $('.visit-num-'+id).html(parseInt($('.visit-num-'+id).html())+1);
+            $('#right-iframe').attr('src', $(this).data('url'));
+        });
+    }
+
+    function commonReturn($data) {
+
+    }
+</script>
+

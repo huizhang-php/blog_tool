@@ -28,6 +28,23 @@ class ToolController extends BaseController {
     }
 
     /**
+     * Description: 改变状态
+     * User: 郭玉朝
+     * CreateTime: 2018/10/15 上午10:52
+     */
+    public function prohibit() {
+        $checkParams = $this->checkParams(['id', 'status']);
+        if ($checkParams !== true) {
+            return $this->sendMsg(401, $checkParams);
+        }
+        // 修改状态
+        if (ToolService::instance()->editTool($this->postParams)) {
+            return $this->sendMsg(200, '修改Tool状态成功');
+        }
+        return $this->sendMsg(400, '修改Tool状态失败');
+    }
+
+    /**
      * Description: 修改工具信息
      * User: 郭玉朝
      * CreateTime: 2018/10/12 上午9:57
@@ -40,7 +57,7 @@ class ToolController extends BaseController {
                 return $this->sendMsg(401, $checkParams);
             }
             // 查询工具的详细信息
-            $toolInfo = ToolService::instance()->getTools(['id'=>5]);
+            $toolInfo = ToolService::instance()->getTools(['id'=>$this->getParams['id']]);
             $this->assign('toolInfo', $toolInfo[0]);
             return $this->fetch();
         }
