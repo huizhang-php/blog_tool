@@ -1,0 +1,21 @@
+<main style="width: 27%;">
+    <div class="news_box">
+        <ul>
+            {foreach $toolList as $toolKey=>$toolValue }
+            <a href="#" >
+                <li class="left-nav" data-url="{$toolValue.url}" data-id="{$toolValue.id}" style="width: 100%;">
+                    <i>
+                        <img src="{$toolValue.pic_url}">
+                    </i>
+                    <div style="height:80px;">
+                        <div style="padding-top: 1rem;">
+                            <strong>{$toolValue.title}</strong>
+                        </div>
+                        <div style="margin-top: 1rem;">使用:<span class="visit-num-{$toolValue.id}">{$toolValue.visit_num}</span>次</div>
+                    </div>
+                </li><br>
+            </a>
+            {/foreach}
+        </ul>
+    </div>
+</main>

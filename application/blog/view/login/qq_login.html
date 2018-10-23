@@ -1,0 +1,17 @@
+{include file='/common/header' /}
+<script type="text/javascript">
+    QC.Login.getMe(function(openId, accessToken){
+        // 将openid 入库
+        var userInfo = {open_id:openId,access_token:accessToken};
+        curlAjax("{:url('/blog/login/qqLogin')}", userInfo, 'commonReturn');
+    });
+
+    function commonReturn(data) {
+        if (data.code !== 200) {
+            QC.Login.signOut();
+        }
+        window.opener = null;
+        window.open('', '_self');
+        window.close();
+    }
+</script>
