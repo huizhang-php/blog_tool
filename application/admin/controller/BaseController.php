@@ -17,7 +17,7 @@ class BaseController extends Controller {
     public function __construct()
     {
         if (!session('?admin_id')) {
-            return $this->redirect('login/login_view');
+            return $this->redirect('login/login');
         }
         parent::__construct();
     }

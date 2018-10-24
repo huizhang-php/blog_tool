@@ -9,6 +9,7 @@
 namespace app\blog\service;
 
 use app\common\model\UserModel;
+use app\common\third_party_api\qq\QqApi;
 use tool\MyCurl;
 use tool\MyTime;
 
@@ -19,7 +20,7 @@ class LoginService {
      * CreateTime: 2018/10/23 下午10:27
      * @var
      * Email: shixi_yuzhao@staff.weibo.com
-     * Description: 用户模型
+     * Description: user model
      */
     private $userModel;
 
@@ -35,7 +36,7 @@ class LoginService {
      * User: yuzhao
      * CreateTime: 2018/10/23 下午10:26
      * Email: shixi_yuzhao@staff.weibo.com
-     * Description: 返回当前服务层
+     * Description: back now obj
      */
     public static function instance() {
         return new LoginService();
@@ -45,39 +46,62 @@ class LoginService {
      * User: yuzhao
      * CreateTime: 2018/10/23 下午10:20
      * Email: shixi_yuzhao@staff.weibo.com
-     * Description: qq登录
+     * Description: qq login
      */
     public function qqLogin($params) {
-        // 获取用户基本信息
-        $qqUserInfo = MyCurl::instance('https://graph.qq.com/user/get_user_info?access_token='.
-            $params['access_token']."&oauth_consumer_key=101406703&openid=".$params['open_id'])->get();
-        $qqUserInfo = json_decode($qqUserInfo, JSON_UNESCAPED_UNICODE);
-        if (empty($qqUserInfo)) {
+        // get user base info
+        $qqUserInfo = QqApi::instance()->getUserInfo($params['access_token'], $params['open_id']);
+        if ($qqUserInfo === false) {
             return false;
         }
-        // 检查是否有此open_id
-        $condition = [
-            'qq_open_id'    => $params['open_id']
-        ];
+        // pack condition and data
+        $this->packConData($qqUserInfo, $params, $condition, $data);
+        // find user info
         $userInfo = $this->userModel->findUser($condition);
+        // Determine whether the user is disabled.
+        if ($userInfo['status'] === 0) {
+            return false;
+        }
+        // if user info is empty
         if (empty($userInfo)) {
-            // 入库
-            $data = [
+            $data = array_merge($data, [
                 'c_time'    => MyTime::getDataTime(),
-                'u_time'    => MyTime::getDataTime(),
                 'qq_open_id'=> $params['open_id'],
-                'nickname'  => $qqUserInfo['nickname'],
-                'city'      => $qqUserInfo['city'],
-                'year'      => $qqUserInfo['year'],
-                'province'  => $qqUserInfo['province']
-            ];
-            if ($qqUserInfo['gender'] === '女') {
-                $data['gender'] = 0;
-            }
+
+            ]);
             if (!$this->userModel->addUser($data)) {
                 return false;
             }
+        } else {
+            $this->userModel->updateUser($condition, $data);
         }
         return true;
+    }
+
+    /**
+     * User: yuzhao
+     * CreateTime: 2018/10/24 上午10:26
+     * @param $qqUserInfo
+     * @param $params
+     * @param $condition
+     * @param $data
+     * Email: shixi_yuzhao@staff.weibo.com
+     * Description: pack register condition and data
+     */
+    private function packConData($qqUserInfo, $params, &$condition, &$data) {
+        // check whether there is openid
+        $condition = [
+            'qq_open_id'    => $params['open_id']
+        ];
+        $data = [
+            'u_time'    => MyTime::getDataTime(),
+            'nickname'  => $qqUserInfo['nickname'],
+            'city'      => $qqUserInfo['city'],
+            'year'      => $qqUserInfo['year'],
+            'province'  => $qqUserInfo['province']
+        ];
+        if ($qqUserInfo['gender'] === '女') {
+            $data['gender'] = 0;
+        }
     }
 }

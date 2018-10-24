@@ -30,8 +30,8 @@ class LoginController extends Controller {
         }
         // qq注册
         if (LoginService::instance()->qqLogin($this->postParams)) {
-            return $this->sendMsg(200, '注册成功');
+            return $this->sendMsg(200, '登录成功');
         }
-        return $this->sendMsg(400, '注册失败');
+        return $this->sendMsg(400, '登录失败');
     }
 }

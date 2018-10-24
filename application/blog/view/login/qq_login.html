@@ -9,9 +9,7 @@
     function commonReturn(data) {
         if (data.code !== 200) {
             QC.Login.signOut();
+            tipMsg(data.code, data.msg,0,true);
         }
-        window.opener = null;
-        window.open('', '_self');
-        window.close();
     }
 </script>

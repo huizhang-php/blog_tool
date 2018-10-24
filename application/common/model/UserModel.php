@@ -34,4 +34,25 @@ class UserModel extends Model {
     public function addUser($data) {
         return $this->save($data);
     }
+
+    /**
+     * User: yuzhao
+     * CreateTime: 2018/10/24 上午10:21
+     * @param $condition
+     * Email: shixi_yuzhao@staff.weibo.com
+     * Description: 更新用户信息
+     */
+    public function updateUser($condition, $data) {
+       return $this->where($condition)->update($data);
+    }
+
+    /**
+     * User: yuzhao
+     * CreateTime: 2018/10/24 下午10:37
+     * Email: shixi_yuzhao@staff.weibo.com
+     * Description: 获取用户列表
+     */
+    public function getUserList() {
+        return $this->select();
+    }
 }

@@ -1,0 +1,89 @@
+{include file='/common/header' /}
+
+<style type="text/css">
+    .layui-table-cell {
+        height: auto;
+        line-height: 28px;
+    }
+</style>
+<div style="padding: 1rem 0rem 1rem 1rem;">
+    <span class="layui-breadcrumb" lay-separator="—">
+        <a href="">用户管理</a>
+        <a href="">用户列表</a>
+    </span>
+</div>
+<hr class="layui-bg-orange">
+<script type="text/html" id="status">
+    {{#
+    switch(d.status) {
+    case 1:}}
+    正常
+    {{#
+    break;
+    case 0:}}
+    禁用
+    {{#          break;
+    default:}}
+    未知
+    {{#    }
+    }}
+</script>
+<script type="text/html" id="right-btn">
+    {{#
+    switch(d.status) {
+    case 1:}}
+    <button onclick="prohibit({{d.id}},{{d.status}});" data-id="{{d.id}}" data-status="{{d.status}}" class="layui-btn layui-btn-xs layui-btn-danger prohibit" lay-event="right-btn">禁用</button>
+    {{#     break;
+    case 0:}}
+    <button onclick="prohibit({{d.id}},{{d.status}});" data-id="{{d.id}}" data-status="{{d.status}}" class="layui-btn layui-btn-xs prohibit" lay-event="right-btn">启用</button>
+    {{#     break;
+    default:}}
+    <button onclick="prohibit({{d.id}},{{d.status}});" data-id="{{d.id}}" data-status="{{d.status}}" class="layui-btn layui-btn-xs prohibit" lay-event="right-btn">启用</button>
+    {{#
+    }
+    }}
+</script>
+<table class="layui-hide" lay-filter="tool-list" id="tool-list"></table>
+<script>
+    // 禁止
+    function prohibit(id, status) {
+        if (status === 1) {
+            status = 0;
+        } else {
+            status = 1;
+        }
+        var data = {id:id,status:status};
+        curlAjax("{:url('admin/user/prohibit')}", data, 'commonReturn');
+    }
+    layui.use(['table','element'], function(){
+        var table = layui.table;
+        var element = layui.element;
+        element.init();
+        table.render({
+            elem: '#tool-list'
+            ,toolbar: '#top-btn'
+            ,url: "{:url('/admin/user/get_user_list')}"
+            ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            ,cols: [[
+                {type:'checkbox'}
+                ,{field:'id', title: 'ID',width:50, sort: true}
+                ,{field:'qq_open_id', title: 'QopenId'}
+                ,{field:'user_name', title: '用户名'}
+                ,{field:'nickname', title: '昵称'}
+                ,{field:'province', title: '省份'}
+                ,{field:'city', title: '城市'}
+                ,{field:'year', title: '出生年'}
+                ,{field:'status', title: '状态',width:80, sort: true, templet: '#status'}
+                ,{field:'c_time', width:165, title: '注册时间', sort: true}
+                ,{field:'u_time', width:165, title: '更新时间', sort: true}
+                ,{fixed: 'right', title:'操作', toolbar: '#right-btn',width:160}
+            ]]
+            ,page: true
+        });
+    });
+
+    // 公共回调方法
+    function commonReturn(data) {
+        tipMsg(data.code, data.msg);
+    }
+</script>
